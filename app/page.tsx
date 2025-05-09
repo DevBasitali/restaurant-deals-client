@@ -1,7 +1,13 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { Star } from "lucide-react"
-import Image from "next/image"
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
+import { Star } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function RestaurantDeals() {
   return (
@@ -16,14 +22,31 @@ export default function RestaurantDeals() {
                   Delicious Savings at Your Favorite Restaurants
                 </h1>
                 <p className="max-w-[600px] text-gray-600 md:text-xl">
-                  Discover exclusive deals and discounts at top-rated restaurants in your area. Eat well, spend less.
+                  Discover exclusive deals and discounts at top-rated
+                  restaurants in your area. Eat well, spend less.
                 </p>
               </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                <Button size="lg" className="bg-orange-600 hover:bg-orange-700">
-                  Explore Deals
-                </Button>
-              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div>
+    <Button 
+      size="lg" 
+      className="w-full bg-orange-600 hover:bg-orange-700"
+    >
+      Explore Deals
+    </Button>
+  </div>
+  <div>
+    <Link href="/auth" passHref>
+      <Button
+        size="lg"
+        className="w-full bg-orange-600 hover:bg-orange-700"
+        role="button"
+      >
+        Login
+      </Button>
+    </Link>
+  </div>
+</div>
             </div>
             <div className="flex items-center justify-center">
               <Image
@@ -52,7 +75,10 @@ export default function RestaurantDeals() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {restaurantDeals.map((deal, index) => (
-              <Card key={index} className="overflow-hidden transition-all duration-200 hover:shadow-lg">
+              <Card
+                key={index}
+                className="overflow-hidden transition-all duration-200 hover:shadow-lg"
+              >
                 <div className="relative h-48">
                   <Image
                     src={deal.image || "/placeholder.svg"}
@@ -71,7 +97,9 @@ export default function RestaurantDeals() {
                   <p className="text-gray-600">{deal.dealTitle}</p>
                 </CardContent>
                 <CardFooter>
-                  <Button className="w-full bg-gray-900 hover:bg-gray-800">View Deal</Button>
+                  <Button className="w-full bg-gray-900 hover:bg-gray-800">
+                    View Deal
+                  </Button>
                 </CardFooter>
               </Card>
             ))}
@@ -83,7 +111,9 @@ export default function RestaurantDeals() {
       <section className="py-16 bg-orange-50">
         <div className="container px-4 md:px-6">
           <div className="flex flex-col items-center justify-center space-y-4 text-center mb-10">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-gray-900">What Our Users Say</h2>
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl text-gray-900">
+              What Our Users Say
+            </h2>
             <p className="max-w-[700px] text-gray-600 md:text-xl">
               Join thousands of satisfied diners saving on their favorite meals
             </p>
@@ -95,12 +125,17 @@ export default function RestaurantDeals() {
                 <CardHeader>
                   <div className="flex justify-center mb-2">
                     {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-orange-400 text-orange-400" />
+                      <Star
+                        key={i}
+                        className="h-5 w-5 fill-orange-400 text-orange-400"
+                      />
                     ))}
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-gray-600 italic mb-4">"{testimonial.comment}"</p>
+                  <p className="text-gray-600 italic mb-4">
+                    "{testimonial.comment}"
+                  </p>
                   <p className="font-semibold">{testimonial.name}</p>
                 </CardContent>
               </Card>
@@ -115,28 +150,42 @@ export default function RestaurantDeals() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h3 className="text-xl font-bold mb-4">DealDish</h3>
-              <p className="text-gray-400">Connecting food lovers with amazing restaurant deals since 2023.</p>
+              <p className="text-gray-400">
+                Connecting food lovers with amazing restaurant deals since 2023.
+              </p>
             </div>
             <div>
               <h3 className="text-xl font-bold mb-4">Quick Links</h3>
               <ul className="space-y-2">
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
                     About Us
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
                     How It Works
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
                     For Restaurants
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-gray-400 hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="text-gray-400 hover:text-white transition-colors"
+                  >
                     Contact
                   </a>
                 </li>
@@ -144,14 +193,18 @@ export default function RestaurantDeals() {
             </div>
             <div>
               <h3 className="text-xl font-bold mb-4">Subscribe</h3>
-              <p className="text-gray-400 mb-4">Get the latest deals delivered to your inbox.</p>
+              <p className="text-gray-400 mb-4">
+                Get the latest deals delivered to your inbox.
+              </p>
               <div className="flex">
                 <input
                   type="email"
                   placeholder="Your email"
                   className="px-4 py-2 rounded-l-md w-full focus:outline-none text-gray-900"
                 />
-                <Button className="rounded-l-none bg-orange-600 hover:bg-orange-700">Join</Button>
+                <Button className="rounded-l-none bg-orange-600 hover:bg-orange-700">
+                  Join
+                </Button>
               </div>
             </div>
           </div>
@@ -161,7 +214,7 @@ export default function RestaurantDeals() {
         </div>
       </footer>
     </div>
-  )
+  );
 }
 
 // Sample data
@@ -214,12 +267,13 @@ const restaurantDeals = [
     discount: "15% OFF",
     image: "/placeholder.svg?height=200&width=300",
   },
-]
+];
 
 const testimonials = [
   {
     name: "Sarah Johnson",
-    comment: "I saved over $50 on our family dinner last weekend. The deals are amazing and so easy to use!",
+    comment:
+      "I saved over $50 on our family dinner last weekend. The deals are amazing and so easy to use!",
   },
   {
     name: "Michael Chen",
@@ -228,6 +282,7 @@ const testimonials = [
   },
   {
     name: "Jessica Williams",
-    comment: "The BOGO sushi deal was incredible! We got to try so many different rolls for half the price.",
+    comment:
+      "The BOGO sushi deal was incredible! We got to try so many different rolls for half the price.",
   },
-]
+];
