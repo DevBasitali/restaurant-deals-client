@@ -34,7 +34,7 @@ export default function AuthPage() {
     setMessage("");
 
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch("http://localhost:5000/auth/login", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -47,7 +47,6 @@ export default function AuthPage() {
 
       if (response.ok) {
         setMessage("Login successful ✅");
-        // ✅ Redirect to dashboard using Next.js router
         router.push("/dashboard");
       } else {
         setMessage(data.message || "Invalid credentials ❌");
