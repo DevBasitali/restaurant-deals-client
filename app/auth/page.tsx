@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -15,47 +14,47 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { EyeIcon, EyeOffIcon, Facebook } from "lucide-react";
-import { useRouter } from 'next/navigation';
-const router = useRouter();
-
-export default function AuthPage() { 
+import { useRouter } from "next/navigation";
 
 
-  const [email, setEmail] = useState('');
+export default function AuthPage() {
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
-  const [password, setPassword] = useState('');
+  const [message, setMessage] = useState("");
+  const [password, setPassword] = useState("");
   const [isRestaurantOwner, setIsRestaurantOwner] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  const router = useRouter();
+
   const handleLogin = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     setLoading(true);
-    setMessage('');
+    setMessage("");
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/login', {
-        method: 'POST',
-        credentials: 'include',
+      const response = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        credentials: "include",
         headers: {
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password })
+        body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setMessage('Login successful ✅');
+        setMessage("Login successful ✅");
         // ✅ Redirect to dashboard using Next.js router
-        router.push('/dashboard');
+        router.push("/dashboard");
       } else {
-        setMessage(data.message || 'Invalid credentials ❌');
+        setMessage(data.message || "Invalid credentials ❌");
       }
     } catch (error) {
-      console.error('Error logging in:', error);
-      setMessage('Server error ❌');
+      console.error("Error logging in:", error);
+      setMessage("Server error ❌");
     }
 
     setLoading(false);
@@ -94,6 +93,8 @@ export default function AuthPage() {
                     id="email-login"
                     type="email"
                     placeholder="your@email.com"
+                    value={email}
+                    onChange={(e)=> setEmail(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
@@ -103,13 +104,15 @@ export default function AuthPage() {
                       id="password-login"
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
+                      value={password}
+                      onChange={(e)=> setPassword(e.target.value)}
                     />
                     <Button
                       type="button"
                       variant="ghost"
                       size="icon"
                       className="absolute right-0 top-0 h-full px-3 py-2 text-gray-400 hover:text-gray-600"
-                      onClick={(handleLogin) => setShowPassword(!showPassword)}
+                      onClick={() => setShowPassword(!showPassword)}
                     >
                       {showPassword ? (
                         <EyeOffIcon className="h-4 w-4" />
@@ -131,7 +134,14 @@ export default function AuthPage() {
                 </div>
               </CardContent>
               <CardFooter className="flex flex-col space-y-4">
-                <Button className="w-full">Login</Button>
+                <Button
+                  className="w-full"
+                  onClick={handleLogin}
+                  disabled={loading}
+                >
+                  {loading ? "Logging in..." : "Login"}
+                  Login
+                </Button>
                 <div className="relative flex items-center justify-center">
                   <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t border-gray-300" />
