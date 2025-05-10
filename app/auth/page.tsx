@@ -1,25 +1,76 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
-import { Switch } from "@/components/ui/switch"
-import { EyeIcon, EyeOffIcon, Facebook } from "lucide-react"
+import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { EyeIcon, EyeOffIcon, Facebook } from "lucide-react";
+import { useRouter } from 'next/navigation';
+const router = useRouter();
 
-export default function AuthPage() {
-  const [isRestaurantOwner, setIsRestaurantOwner] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+export default function AuthPage() { 
+
+
+  const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const [password, setPassword] = useState('');
+  const [isRestaurantOwner, setIsRestaurantOwner] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const handleLogin = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage('');
+
+    try {
+      const response = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setMessage('Login successful ✅');
+        // ✅ Redirect to dashboard using Next.js router
+        router.push('/dashboard');
+      } else {
+        setMessage(data.message || 'Invalid credentials ❌');
+      }
+    } catch (error) {
+      console.error('Error logging in:', error);
+      setMessage('Server error ❌');
+    }
+
+    setLoading(false);
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
-          <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">Welcome</h2>
-          <p className="mt-2 text-sm text-gray-600">Sign in to your account or create a new one</p>
+          <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
+            Welcome
+          </h2>
+          <p className="mt-2 text-sm text-gray-600">
+            Sign in to your account or create a new one
+          </p>
         </div>
 
         <Tabs defaultValue="login" className="w-full">
@@ -32,25 +83,39 @@ export default function AuthPage() {
             <Card className="border-none shadow-lg">
               <CardHeader>
                 <CardTitle>Login</CardTitle>
-                <CardDescription>Enter your credentials to access your account</CardDescription>
+                <CardDescription>
+                  Enter your credentials to access your account
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email-login">Email</Label>
-                  <Input id="email-login" type="email" placeholder="your@email.com" />
+                  <Input
+                    id="email-login"
+                    type="email"
+                    placeholder="your@email.com"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password-login">Password</Label>
                   <div className="relative">
-                    <Input id="password-login" type={showPassword ? "text" : "password"} placeholder="••••••••" />
+                    <Input
+                      id="password-login"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                    />
                     <Button
                       type="button"
                       variant="ghost"
                       size="icon"
                       className="absolute right-0 top-0 h-full px-3 py-2 text-gray-400 hover:text-gray-600"
-                      onClick={() => setShowPassword(!showPassword)}
+                      onClick={(handleLogin) => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+                      {showPassword ? (
+                        <EyeOffIcon className="h-4 w-4" />
+                      ) : (
+                        <EyeIcon className="h-4 w-4" />
+                      )}
                     </Button>
                   </div>
                 </div>
@@ -60,7 +125,9 @@ export default function AuthPage() {
                     checked={isRestaurantOwner}
                     onCheckedChange={setIsRestaurantOwner}
                   />
-                  <Label htmlFor="restaurant-owner-login">Continue as Restaurant Owner</Label>
+                  <Label htmlFor="restaurant-owner-login">
+                    Continue as Restaurant Owner
+                  </Label>
                 </div>
               </CardContent>
               <CardFooter className="flex flex-col space-y-4">
@@ -69,10 +136,15 @@ export default function AuthPage() {
                   <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t border-gray-300" />
                   </div>
-                  <div className="relative px-4 text-sm text-gray-500 bg-white">or continue with</div>
+                  <div className="relative px-4 text-sm text-gray-500 bg-white">
+                    or continue with
+                  </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <Button variant="outline" className="flex items-center justify-center gap-2">
+                  <Button
+                    variant="outline"
+                    className="flex items-center justify-center gap-2"
+                  >
                     <svg className="h-5 w-5" viewBox="0 0 24 24">
                       <path
                         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -93,7 +165,10 @@ export default function AuthPage() {
                     </svg>
                     Google
                   </Button>
-                  <Button variant="outline" className="flex items-center justify-center gap-2">
+                  <Button
+                    variant="outline"
+                    className="flex items-center justify-center gap-2"
+                  >
                     <Facebook className="h-5 w-5 text-blue-600" />
                     Facebook
                   </Button>
@@ -106,17 +181,27 @@ export default function AuthPage() {
             <Card className="border-none shadow-lg">
               <CardHeader>
                 <CardTitle>Sign Up</CardTitle>
-                <CardDescription>Create a new account to get started</CardDescription>
+                <CardDescription>
+                  Create a new account to get started
+                </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email-signup">Email</Label>
-                  <Input id="email-signup" type="email" placeholder="your@email.com" />
+                  <Input
+                    id="email-signup"
+                    type="email"
+                    placeholder="your@email.com"
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="password-signup">Password</Label>
                   <div className="relative">
-                    <Input id="password-signup" type={showPassword ? "text" : "password"} placeholder="••••••••" />
+                    <Input
+                      id="password-signup"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="••••••••"
+                    />
                     <Button
                       type="button"
                       variant="ghost"
@@ -124,7 +209,11 @@ export default function AuthPage() {
                       className="absolute right-0 top-0 h-full px-3 py-2 text-gray-400 hover:text-gray-600"
                       onClick={() => setShowPassword(!showPassword)}
                     >
-                      {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+                      {showPassword ? (
+                        <EyeOffIcon className="h-4 w-4" />
+                      ) : (
+                        <EyeIcon className="h-4 w-4" />
+                      )}
                     </Button>
                   </div>
                 </div>
@@ -141,9 +230,15 @@ export default function AuthPage() {
                       variant="ghost"
                       size="icon"
                       className="absolute right-0 top-0 h-full px-3 py-2 text-gray-400 hover:text-gray-600"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
                     >
-                      {showConfirmPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+                      {showConfirmPassword ? (
+                        <EyeOffIcon className="h-4 w-4" />
+                      ) : (
+                        <EyeIcon className="h-4 w-4" />
+                      )}
                     </Button>
                   </div>
                 </div>
@@ -153,7 +248,9 @@ export default function AuthPage() {
                     checked={isRestaurantOwner}
                     onCheckedChange={setIsRestaurantOwner}
                   />
-                  <Label htmlFor="restaurant-owner-signup">Continue as Restaurant Owner</Label>
+                  <Label htmlFor="restaurant-owner-signup">
+                    Continue as Restaurant Owner
+                  </Label>
                 </div>
               </CardContent>
               <CardFooter className="flex flex-col space-y-4">
@@ -162,10 +259,15 @@ export default function AuthPage() {
                   <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t border-gray-300" />
                   </div>
-                  <div className="relative px-4 text-sm text-gray-500 bg-white">or continue with</div>
+                  <div className="relative px-4 text-sm text-gray-500 bg-white">
+                    or continue with
+                  </div>
                 </div>
                 <div className="grid grid-cols-2 gap-4">
-                  <Button variant="outline" className="flex items-center justify-center gap-2">
+                  <Button
+                    variant="outline"
+                    className="flex items-center justify-center gap-2"
+                  >
                     <svg className="h-5 w-5" viewBox="0 0 24 24">
                       <path
                         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -186,7 +288,10 @@ export default function AuthPage() {
                     </svg>
                     Google
                   </Button>
-                  <Button variant="outline" className="flex items-center justify-center gap-2">
+                  <Button
+                    variant="outline"
+                    className="flex items-center justify-center gap-2"
+                  >
                     <Facebook className="h-5 w-5 text-blue-600" />
                     Facebook
                   </Button>
@@ -209,5 +314,5 @@ export default function AuthPage() {
         </p>
       </div>
     </div>
-  )
+  );
 }
