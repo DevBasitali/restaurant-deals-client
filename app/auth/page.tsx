@@ -16,7 +16,6 @@ import { Switch } from "@/components/ui/switch";
 import { EyeIcon, EyeOffIcon, Facebook } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-
 export default function AuthPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -28,7 +27,7 @@ export default function AuthPage() {
 
   const router = useRouter();
 
-  const handleLogin = async (e: { preventDefault: () => void; }) => {
+  const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setLoading(true);
     setMessage("");
@@ -47,7 +46,14 @@ export default function AuthPage() {
 
       if (response.ok) {
         setMessage("Login successful ✅");
-        router.push("/dashboard");
+        if (data.role === "admin") {
+          router.push("/admin");
+        } else if (data.role === "restaurant_owner") {
+          router.push("/dashboard");
+        } else {
+          // Default fallback for other roles
+          router.push("/");
+        }
       } else {
         setMessage(data.message || "Invalid credentials ❌");
       }
@@ -93,7 +99,7 @@ export default function AuthPage() {
                     type="email"
                     placeholder="your@email.com"
                     value={email}
-                    onChange={(e)=> setEmail(e.target.value)}
+                    onChange={(e) => setEmail(e.target.value)}
                   />
                 </div>
                 <div className="space-y-2">
@@ -104,7 +110,7 @@ export default function AuthPage() {
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
                       value={password}
-                      onChange={(e)=> setPassword(e.target.value)}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                     <Button
                       type="button"
@@ -139,7 +145,7 @@ export default function AuthPage() {
                   disabled={loading}
                 >
                   {loading ? "Logging in..." : "Login"}
-                  Login
+                  
                 </Button>
                 <div className="relative flex items-center justify-center">
                   <div className="absolute inset-0 flex items-center">
