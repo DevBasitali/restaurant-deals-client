@@ -33,7 +33,7 @@ export default function AuthPage() {
     setMessage("");
 
     try {
-      const response = await fetch("http://localhost:5000/auth/login", {
+      const response = await fetch("http://localhost:5000/api/auth/login", {
         method: "POST",
         credentials: "include",
         headers: {
@@ -42,8 +42,10 @@ export default function AuthPage() {
         body: JSON.stringify({ email, password }),
       });
 
+      console.log("this is response", response);
       const data = await response.json();
-
+      console.log("this is data", data);
+      
       if (response.ok) {
         setMessage("Login successful ✅");
         if (data.role === "admin") {
@@ -145,7 +147,6 @@ export default function AuthPage() {
                   disabled={loading}
                 >
                   {loading ? "Logging in..." : "Login"}
-                  
                 </Button>
                 <div className="relative flex items-center justify-center">
                   <div className="absolute inset-0 flex items-center">
