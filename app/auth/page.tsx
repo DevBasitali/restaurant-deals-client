@@ -41,11 +41,10 @@ export default function AuthPage() {
         },
         body: JSON.stringify({ email, password }),
       });
-
       console.log("this is response", response);
+
       const data = await response.json();
-      console.log("this is data", data);
-      
+  
       if (response.ok) {
         setMessage("Login successful ✅");
         if (data.role === "admin") {
@@ -54,7 +53,7 @@ export default function AuthPage() {
           router.push("/dashboard");
         } else {
           // Default fallback for other roles
-          router.push("/");
+          router.push('/deals');
         }
       } else {
         setMessage(data.message || "Invalid credentials ❌");
