@@ -9,12 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { EyeIcon, EyeOffIcon, Facebook } from "lucide-react";
-import { useRouter } from "next/navigation";
+
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
