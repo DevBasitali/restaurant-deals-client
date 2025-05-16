@@ -27,26 +27,26 @@ export default function RestaurantDeals() {
                 </p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-  <div>
-    <Button 
-      size="lg" 
-      className="w-full bg-orange-600 hover:bg-orange-700"
-    >
-      Explore Deals
-    </Button>
-  </div>
-  <div>
-    <Link href="/auth" passHref>
-      <Button
-        size="lg"
-        className="w-full bg-orange-600 hover:bg-orange-700"
-        role="button"
-      >
-        Login
-      </Button>
-    </Link>
-  </div>
-</div>
+                <div>
+                  <Button
+                    size="lg"
+                    className="w-full bg-orange-600 hover:bg-orange-700"
+                  >
+                    Explore Deals
+                  </Button>
+                </div>
+                <div>
+                  <Link href="/auth" passHref>
+                    <Button
+                      size="lg"
+                      className="w-full bg-orange-600 hover:bg-orange-700"
+                      role="button"
+                    >
+                      Login
+                    </Button>
+                  </Link>
+                </div>
+              </div>
             </div>
             <div className="flex items-center justify-center">
               <Image
