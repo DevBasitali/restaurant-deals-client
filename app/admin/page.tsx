@@ -1,3 +1,4 @@
+
 import { AdminShell } from "@/components/admin-shell"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Clock, DollarSign, Store, Users } from "lucide-react"
@@ -6,6 +7,8 @@ import { RecentDeals } from "@/components/recent-deals"
 import { RecentBids } from "@/components/recent-bids"
 
 export default function AdminDashboard() {
+
+
   return (
     <AdminShell>
       <div className="flex flex-col gap-5">
