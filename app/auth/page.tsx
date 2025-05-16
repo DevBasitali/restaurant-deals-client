@@ -16,7 +16,6 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { EyeIcon, EyeOffIcon, Facebook } from "lucide-react";
 
-
 export default function AuthPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
@@ -45,16 +44,18 @@ export default function AuthPage() {
       console.log("this is response", response);
 
       const data = await response.json();
-  
+      console.log("Login Response Data:", data);
+
       if (response.ok) {
         setMessage("Login successful ✅");
-        if (data.role === "admin") {
+        const userRole = data.user.role;
+        console.log('this is role', userRole)
+        if (userRole === "admin") {
           router.push("/admin");
-        } else if (data.role === "restaurant_owner") {
+        } else if (userRole === "restaurant_owner") {
           router.push("/dashboard");
         } else {
-          // Default fallback for other roles
-          router.push('/deals');
+          router.push("/deals");
         }
       } else {
         setMessage(data.message || "Invalid credentials ❌");
@@ -129,7 +130,7 @@ export default function AuthPage() {
                     </Button>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
+                {/* <div className="flex items-center space-x-2">
                   <Switch
                     id="restaurant-owner-login"
                     checked={isRestaurantOwner}
@@ -138,7 +139,7 @@ export default function AuthPage() {
                   <Label htmlFor="restaurant-owner-login">
                     Continue as Restaurant Owner
                   </Label>
-                </div>
+                </div> */}
               </CardContent>
               <CardFooter className="flex flex-col space-y-4">
                 <Button
