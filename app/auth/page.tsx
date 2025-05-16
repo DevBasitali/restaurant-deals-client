@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { EyeIcon, EyeOffIcon, Facebook } from "lucide-react";
+import { SignupUser } from '../auth/signup'
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
@@ -24,8 +25,33 @@ export default function AuthPage() {
   const [isRestaurantOwner, setIsRestaurantOwner] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
+   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const router = useRouter();
+
+  const SignupUser = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "restaurant_owner", // or "user"
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    try {
+      const response = SignupUser(formData);
+      setSuccess("Signup successful. Please wait for admin approval.");
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
 
   const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
