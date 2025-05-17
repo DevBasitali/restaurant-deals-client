@@ -18,8 +18,8 @@ import { EyeIcon, EyeOffIcon, Facebook } from "lucide-react";
 import { SignupUser } from '../auth/signup'
 
 export default function AuthPage() {
-  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [password, setPassword] = useState("");
   const [isRestaurantOwner, setIsRestaurantOwner] = useState(false);
