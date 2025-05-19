@@ -29,29 +29,6 @@ export default function AuthPage() {
   const [success, setSuccess] = useState(null);
   const router = useRouter();
 
-  const SignupUser = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    role: "restaurant_owner", // or "user"
-  });
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError(null);
-    try {
-      const response = SignupUser(formData);
-      setSuccess("Signup successful. Please wait for admin approval.");
-    } catch (err) {
-      setError(err.message);
-    }
-  };
-
 
   const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
