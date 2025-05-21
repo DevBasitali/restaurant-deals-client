@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { EyeIcon, EyeOffIcon, Facebook } from "lucide-react";
-import { SignupUser } from '../auth/signup'
+import { HandleSignup } from "./signup";
 
 export default function AuthPage() {
   const [loading, setLoading] = useState(false);
@@ -25,10 +25,7 @@ export default function AuthPage() {
   const [isRestaurantOwner, setIsRestaurantOwner] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
   const router = useRouter();
-
 
   const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -52,7 +49,7 @@ export default function AuthPage() {
       if (response.ok) {
         setMessage("Login successful ✅");
         const userRole = data.user.role;
-        console.log('this is role', userRole)
+        console.log("this is role", userRole);
         if (userRole === "admin") {
           router.push("/admin");
         } else if (userRole === "restaurant_owner") {
@@ -74,6 +71,7 @@ export default function AuthPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
+
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
             Welcome
@@ -332,6 +330,7 @@ export default function AuthPage() {
           </a>
           .
         </p>
+
       </div>
     </div>
   );
