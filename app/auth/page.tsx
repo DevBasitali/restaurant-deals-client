@@ -18,6 +18,10 @@ import { EyeIcon, EyeOffIcon, Facebook } from "lucide-react";
 import { HandleSignup } from "./signup";
 
 export default function AuthPage() {
+  const [signupEmail, setSignupEmail] = useState("");
+  const [signupPassword, setSignupPassword] = useState("");
+  const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
+
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
@@ -26,6 +30,34 @@ export default function AuthPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
+
+    if (signupPassword !== signupConfirmPassword) {
+      setMessage("Passwords do not match ❌");
+      setLoading(false);
+      return;
+    }
+
+    const formData = {
+      email: signupEmail,
+      password: signupPassword,
+      role: isRestaurantOwner ? "restaurant_owner" : "user",
+    };
+
+    try {
+      const data = await HandleSignup(formData); // 🔥 This is YOUR function
+      setMessage("Signup successful ✅");
+    } catch (error: any) {
+      console.error("Signup error:", error);
+      setMessage(error.message || "Signup failed ❌");
+    }
+
+    setLoading(false);
+  };
 
   const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -71,7 +103,6 @@ export default function AuthPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
-
         <div className="text-center">
           <h2 className="mt-6 text-3xl font-bold tracking-tight text-gray-900">
             Welcome
@@ -210,8 +241,11 @@ export default function AuthPage() {
                     id="email-signup"
                     type="email"
                     placeholder="your@email.com"
+                    value={signupEmail}
+                    onChange={(e) => setSignupEmail(e.target.value)}
                   />
                 </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="password-signup">Password</Label>
                   <div className="relative">
@@ -219,6 +253,8 @@ export default function AuthPage() {
                       id="password-signup"
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
+                      value={signupPassword}
+                      onChange={(e) => setSignupPassword(e.target.value)}
                     />
                     <Button
                       type="button"
@@ -242,6 +278,8 @@ export default function AuthPage() {
                       id="confirm-password"
                       type={showConfirmPassword ? "text" : "password"}
                       placeholder="••••••••"
+                      value={signupConfirmPassword}
+                      onChange={(e) => setSignupConfirmPassword(e.target.value)}
                     />
                     <Button
                       type="button"
@@ -260,7 +298,7 @@ export default function AuthPage() {
                     </Button>
                   </div>
                 </div>
-                <div className="flex items-center space-x-2">
+                {/* <div className="flex items-center space-x-2">
                   <Switch
                     id="restaurant-owner-signup"
                     checked={isRestaurantOwner}
@@ -269,10 +307,22 @@ export default function AuthPage() {
                   <Label htmlFor="restaurant-owner-signup">
                     Continue as Restaurant Owner
                   </Label>
-                </div>
+                </div> */}
               </CardContent>
+
               <CardFooter className="flex flex-col space-y-4">
-                <Button className="w-full">Sign Up</Button>
+                <Button
+                  className="w-full"
+                  onClick={handleSignup}
+                  disabled={loading}
+                >
+                  {loading ? "Signing up..." : "Sign Up"}
+                  {message && (
+                    <p className="text-center text-sm text-red-600">
+                      {message}
+                    </p>
+                  )}
+                </Button>
                 <div className="relative flex items-center justify-center">
                   <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t border-gray-300" />
@@ -330,7 +380,6 @@ export default function AuthPage() {
           </a>
           .
         </p>
-
       </div>
     </div>
   );

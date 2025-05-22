@@ -10,6 +10,7 @@ export const HandleSignup = async (formData: any) => {
       credentials: "include", // needed if your backend sets cookies
       body: JSON.stringify(formData),
     });
+    
     console.log("This is signup response", response);
 
     const data = await response.json();
