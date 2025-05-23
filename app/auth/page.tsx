@@ -31,33 +31,33 @@ export default function AuthPage() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
 
-  const handleSignup = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
+  // const handleSignup = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   setLoading(true);
+  //   setMessage("");
 
-    if (signupPassword !== signupConfirmPassword) {
-      setMessage("Passwords do not match ❌");
-      setLoading(false);
-      return;
-    }
+  //   if (signupPassword !== signupConfirmPassword) {
+  //     setMessage("Passwords do not match ❌");
+  //     setLoading(false);
+  //     return;
+  //   }
 
-    const formData = {
-      email: signupEmail,
-      password: signupPassword,
-      role: isRestaurantOwner ? "restaurant_owner" : "user",
-    };
+  //   const formData = {
+  //     email: signupEmail,
+  //     password: signupPassword,
+  //     role: isRestaurantOwner ? "restaurant_owner" : "user",
+  //   };
 
-    try {
-      const data = await HandleSignup(formData); // 🔥 This is YOUR function
-      setMessage("Signup successful ✅");
-    } catch (error: any) {
-      console.error("Signup error:", error);
-      setMessage(error.message || "Signup failed ❌");
-    }
+  //   try {
+  //     const data = await HandleSignup(formData); // 🔥 This is YOUR function
+  //     setMessage("Signup successful ✅");
+  //   } catch (error: any) {
+  //     console.error("Signup error:", error);
+  //     setMessage(error.message || "Signup failed ❌");
+  //   }
 
-    setLoading(false);
-  };
+  //   setLoading(false);
+  // };
 
   const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
