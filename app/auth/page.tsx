@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { EyeIcon, EyeOffIcon, Facebook } from "lucide-react";
-import { HandleSignup } from "./signup";
+// import { HandleSignup } from "./signup";
 
 export default function AuthPage() {
   const [signupEmail, setSignupEmail] = useState("");
@@ -59,46 +59,108 @@ export default function AuthPage() {
   //   setLoading(false);
   // };
 
-  const handleLogin = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
+  const handleLogin = async (e: { preventDefault: () => void; }) => {
+  e.preventDefault();
+  setLoading(true);
+  setMessage("");
 
-    try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
-      console.log("this is response", response);
+  try {
+    const response = await fetch("http://localhost:5000/api/auth/login", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
 
-      const data = await response.json();
-      console.log("Login Response Data:", data);
+    const data = await response.json();
 
-      if (response.ok) {
-        setMessage("Login successful ✅");
-        const userRole = data.user.role;
-        console.log("this is role", userRole);
-        if (userRole === "admin") {
-          router.push("/admin");
-        } else if (userRole === "restaurant_owner") {
-          router.push("/dashboard");
-        } else {
-          router.push("/deals");
-        }
-      } else {
-        setMessage(data.message || "Invalid credentials ❌");
+    if (response.ok) {
+      setMessage("Login successful ✅");
+      
+      // Validate user data structure
+      if (!data.user || !data.user.role) {
+        alert("Invalid user data received from server");
+        return;
       }
-    } catch (error) {
-      console.error("Error logging in:", error);
-      setMessage("Server error ❌");
-    }
 
+      // Role-based routing with fallback
+      const roleRedirects: { [key: string]: string } = {
+        admin: "/admin",
+        restaurant_owner: "/dashboard",
+        default: "/deals"
+      };
+
+      // Get valid role or use default
+      const validRole = Object.keys(roleRedirects).includes(data.user.role)
+        ? data.user.role
+        : 'default';
+
+      router.push(roleRedirects[validRole]);
+    } else {
+      // Enhanced error messages
+      const errorMessage = (data.message || "login failed").toLowerCase();
+      
+      if (errorMessage.includes("not found") || errorMessage.includes("no user")) {
+        alert("❌ Account not found. Please sign up first!");
+      } else if (errorMessage.includes("password") || errorMessage.includes("credentials")) {
+        alert("🔒 Incorrect password. Please try again.");
+      } else {
+        alert(`⚠️ Login error: ${data.message}`);
+      }
+      
+      setMessage(data.message || "Login failed ❌");
+    }
+  } catch (error) {
+    console.error("Network error:", error);
+    alert("🌐 Server connection failed. Please try again later.");
+    setMessage("Network error ❌");
+  } finally {
     setLoading(false);
-  };
+  }
+};
+
+//   const handleLogin = async (e: { preventDefault: () => void }) => {
+//   e.preventDefault();
+//   setLoading(true);
+//   setMessage("");
+
+//   try {
+//     const response = await fetch("http://localhost:5000/api/auth/login", {
+//       method: "POST",
+//       credentials: "include",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify({ email, password }),
+//     });
+//       console.log("this is response", response);
+
+//       const data = await response.json();
+//       console.log("Login Response Data:", data);
+
+//     if (response.ok) {
+//         setMessage("Login successful ✅");
+//         const userRole = data.user.role;
+//         console.log("this is role", userRole);
+//         if (userRole === "admin") {
+//           router.push("/admin");
+//         } else if (userRole === "restaurant_owner") {
+//           router.push("/dashboard");
+//     } else {
+//           router.push("/deals");
+//         }
+//       } else {
+//         setMessage(data.message || "Invalid credentials ❌");
+//     }
+//   } catch (error) {
+//       console.error("Error logging in:", error);
+//       setMessage("Server error ❌");
+//     }
+
+//     setLoading(false);
+// };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -241,8 +303,8 @@ export default function AuthPage() {
                     id="email-signup"
                     type="email"
                     placeholder="your@email.com"
-                    value={signupEmail}
-                    onChange={(e) => setSignupEmail(e.target.value)}
+                    // value={signupEmail}
+                    // onChange={(e) => setSignupEmail(e.target.value)}
                   />
                 </div>
 
@@ -253,8 +315,8 @@ export default function AuthPage() {
                       id="password-signup"
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
-                      value={signupPassword}
-                      onChange={(e) => setSignupPassword(e.target.value)}
+                      // value={signupPassword}
+                      // onChange={(e) => setSignupPassword(e.target.value)}
                     />
                     <Button
                       type="button"
@@ -278,8 +340,8 @@ export default function AuthPage() {
                       id="confirm-password"
                       type={showConfirmPassword ? "text" : "password"}
                       placeholder="••••••••"
-                      value={signupConfirmPassword}
-                      onChange={(e) => setSignupConfirmPassword(e.target.value)}
+                      // value={signupConfirmPassword}
+                      // onChange={(e) => setSignupConfirmPassword(e.target.value)}
                     />
                     <Button
                       type="button"
@@ -313,7 +375,7 @@ export default function AuthPage() {
               <CardFooter className="flex flex-col space-y-4">
                 <Button
                   className="w-full"
-                  onClick={handleSignup}
+                  // onClick={handleSignup}
                   disabled={loading}
                 >
                   {loading ? "Signing up..." : "Sign Up"}
