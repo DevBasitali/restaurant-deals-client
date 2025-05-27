@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { EyeIcon, EyeOffIcon, Facebook } from "lucide-react";
+import { EyeIcon, EyeOffIcon, Facebook } from "lucide-react";  
 // import { HandleSignup } from "./signup";
 
 export default function AuthPage() {
@@ -30,6 +30,8 @@ export default function AuthPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
+
+  const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   // const handleSignup = async (e: React.FormEvent) => {
   //   e.preventDefault();
@@ -65,7 +67,7 @@ export default function AuthPage() {
   setMessage("");
 
   try {
-    const response = await fetch("http://localhost:5000/api/auth/login", {
+    const response = await fetch(`${BASE_URL}/api/auth/login`, {
       method: "POST",
       credentials: "include",
       headers: {
