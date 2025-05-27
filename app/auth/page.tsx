@@ -12,15 +12,23 @@ import {
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { EyeIcon, EyeOffIcon, Facebook } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
-import { EyeIcon, EyeOffIcon, Facebook } from "lucide-react";  
 // import { HandleSignup } from "./signup";
 
 export default function AuthPage() {
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
+  const [role, setRole] = useState("");
 
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -30,139 +38,129 @@ export default function AuthPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
-
   const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  // const handleSignup = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-  //   setLoading(true);
-  //   setMessage("");
 
-  //   if (signupPassword !== signupConfirmPassword) {
-  //     setMessage("Passwords do not match ❌");
-  //     setLoading(false);
-  //     return;
-  //   }
-
-  //   const formData = {
-  //     email: signupEmail,
-  //     password: signupPassword,
-  //     role: isRestaurantOwner ? "restaurant_owner" : "user",
-  //   };
-
-  //   try {
-  //     const data = await HandleSignup(formData); // 🔥 This is YOUR function
-  //     setMessage("Signup successful ✅");
-  //   } catch (error: any) {
-  //     console.error("Signup error:", error);
-  //     setMessage(error.message || "Signup failed ❌");
-  //   }
-
-  //   setLoading(false);
-  // };
-
-  const handleLogin = async (e: { preventDefault: () => void; }) => {
-  e.preventDefault();
+const handleSignup = async () => {
   setLoading(true);
   setMessage("");
+  const { toast } = useToast();
 
   try {
-    const response = await fetch(`${BASE_URL}/api/auth/login`, {
+    const response = await fetch(`${BASE_URL}/api/auth/signup`, {
       method: "POST",
-      credentials: "include",
+      credentials: "include", // only if your API uses cookies
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({
+        signupEmail,
+        signupPassword,
+        signupConfirmPassword,
+        role,
+      }),
     });
-
+   console.log('this is response', response)
     const data = await response.json();
 
+    console.log('this is response.json', data)
+
     if (response.ok) {
-      setMessage("Login successful ✅");
-      
-      // Validate user data structure
-      if (!data.user || !data.user.role) {
-        alert("Invalid user data received from server");
-        return;
-      }
+      toast({
+        title: "✅ Signup Successful",
+        description: "You can now log in.",
+      });
 
-      // Role-based routing with fallback
-      const roleRedirects: { [key: string]: string } = {
-        admin: "/admin",
-        restaurant_owner: "/dashboard",
-        default: "/deals"
-      };
-
-      // Get valid role or use default
-      const validRole = Object.keys(roleRedirects).includes(data.user.role)
-        ? data.user.role
-        : 'default';
-
-      router.push(roleRedirects[validRole]);
+      // Optionally redirect
+      router.push("/login");
     } else {
-      // Enhanced error messages
-      const errorMessage = (data.message || "login failed").toLowerCase();
-      
-      if (errorMessage.includes("not found") || errorMessage.includes("no user")) {
-        alert("❌ Account not found. Please sign up first!");
-      } else if (errorMessage.includes("password") || errorMessage.includes("credentials")) {
-        alert("🔒 Incorrect password. Please try again.");
-      } else {
-        alert(`⚠️ Login error: ${data.message}`);
-      }
-      
-      setMessage(data.message || "Login failed ❌");
+      toast({
+        title: "❌ Signup Failed",
+        description: data.message || "Please try again.",
+        variant: "destructive",
+      });
     }
   } catch (error) {
-    console.error("Network error:", error);
-    alert("🌐 Server connection failed. Please try again later.");
-    setMessage("Network error ❌");
+    console.error("Signup error:", error);
+    toast({
+      title: "🌐 Network Error",
+      description: "Please check your connection and try again.",
+      variant: "destructive",
+    });
   } finally {
     setLoading(false);
   }
 };
 
-//   const handleLogin = async (e: { preventDefault: () => void }) => {
-//   e.preventDefault();
-//   setLoading(true);
-//   setMessage("");
+  
 
-//   try {
-//     const response = await fetch("http://localhost:5000/api/auth/login", {
-//       method: "POST",
-//       credentials: "include",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify({ email, password }),
-//     });
-//       console.log("this is response", response);
+  const handleLogin = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
 
-//       const data = await response.json();
-//       console.log("Login Response Data:", data);
+    try {
+      const response = await fetch(`${BASE_URL}/api/auth/login`, {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-//     if (response.ok) {
-//         setMessage("Login successful ✅");
-//         const userRole = data.user.role;
-//         console.log("this is role", userRole);
-//         if (userRole === "admin") {
-//           router.push("/admin");
-//         } else if (userRole === "restaurant_owner") {
-//           router.push("/dashboard");
-//     } else {
-//           router.push("/deals");
-//         }
-//       } else {
-//         setMessage(data.message || "Invalid credentials ❌");
-//     }
-//   } catch (error) {
-//       console.error("Error logging in:", error);
-//       setMessage("Server error ❌");
-//     }
+      const data = await response.json();
 
-//     setLoading(false);
-// };
+      if (response.ok) {
+        setMessage("Login successful ✅");
+
+        // Validate user data structure
+        if (!data.user || !data.user.role) {
+          alert("Invalid user data received from server");
+          return;
+        }
+
+        // Role-based routing with fallback
+        const roleRedirects: { [key: string]: string } = {
+          admin: "/admin",
+          restaurant_owner: "/dashboard",
+          default: "/deals",
+        };
+
+        // Get valid role or use default
+        const validRole = Object.keys(roleRedirects).includes(data.user.role)
+          ? data.user.role
+          : "default";
+
+        router.push(roleRedirects[validRole]);
+      } else {
+        // Enhanced error messages
+        const errorMessage = (data.message || "login failed").toLowerCase();
+
+        if (
+          errorMessage.includes("not found") ||
+          errorMessage.includes("no user")
+        ) {
+          alert("❌ Account not found. Please sign up first!");
+        } else if (
+          errorMessage.includes("password") ||
+          errorMessage.includes("credentials")
+        ) {
+          alert("🔒 Incorrect password. Please try again.");
+        } else {
+          alert(`⚠️ Login error: ${data.message}`);
+        }
+
+        setMessage(data.message || "Login failed ❌");
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+      alert("🌐 Server connection failed. Please try again later.");
+      setMessage("Network error ❌");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -299,14 +297,15 @@ export default function AuthPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+
                 <div className="space-y-2">
                   <Label htmlFor="email-signup">Email</Label>
                   <Input
                     id="email-signup"
                     type="email"
                     placeholder="your@email.com"
-                    // value={signupEmail}
-                    // onChange={(e) => setSignupEmail(e.target.value)}
+                    value={signupEmail}
+                    onChange={(e) => setSignupEmail(e.target.value)}
                   />
                 </div>
 
@@ -317,8 +316,8 @@ export default function AuthPage() {
                       id="password-signup"
                       type={showPassword ? "text" : "password"}
                       placeholder="••••••••"
-                      // value={signupPassword}
-                      // onChange={(e) => setSignupPassword(e.target.value)}
+                      value={signupPassword}
+                      onChange={(e) => setSignupPassword(e.target.value)}
                     />
                     <Button
                       type="button"
@@ -335,6 +334,7 @@ export default function AuthPage() {
                     </Button>
                   </div>
                 </div>
+
                 <div className="space-y-2">
                   <Label htmlFor="confirm-password">Confirm Password</Label>
                   <div className="relative">
@@ -342,8 +342,8 @@ export default function AuthPage() {
                       id="confirm-password"
                       type={showConfirmPassword ? "text" : "password"}
                       placeholder="••••••••"
-                      // value={signupConfirmPassword}
-                      // onChange={(e) => setSignupConfirmPassword(e.target.value)}
+                      value={signupConfirmPassword}
+                      onChange={(e) => setSignupConfirmPassword(e.target.value)}
                     />
                     <Button
                       type="button"
@@ -362,22 +362,36 @@ export default function AuthPage() {
                     </Button>
                   </div>
                 </div>
-                {/* <div className="flex items-center space-x-2">
-                  <Switch
-                    id="restaurant-owner-signup"
-                    checked={isRestaurantOwner}
-                    onCheckedChange={setIsRestaurantOwner}
-                  />
-                  <Label htmlFor="restaurant-owner-signup">
-                    Continue as Restaurant Owner
-                  </Label>
-                </div> */}
-              </CardContent>
 
+                <div className="space-y-2">
+                  <Label htmlFor="role">Role</Label>
+                  <div className="relative">
+                    <Select 
+                    value={role} 
+                    onValueChange={(val) => setRole(val)}
+                    >
+                      <SelectTrigger
+                        id="role"
+                        className="w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                      >
+                        <SelectValue placeholder="Select Role" />
+                      </SelectTrigger>
+                      <SelectContent className="z-50">
+                        <SelectItem value="user">User</SelectItem>
+                        <SelectItem value="admin">Admin</SelectItem>
+                        <SelectItem value="restaurant_owner">
+                          Restaurant Owner
+                        </SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+              </CardContent>
               <CardFooter className="flex flex-col space-y-4">
                 <Button
                   className="w-full"
-                  // onClick={handleSignup}
+                  onClick={handleSignup}
                   disabled={loading}
                 >
                   {loading ? "Signing up..." : "Sign Up"}
@@ -387,47 +401,6 @@ export default function AuthPage() {
                     </p>
                   )}
                 </Button>
-                <div className="relative flex items-center justify-center">
-                  <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t border-gray-300" />
-                  </div>
-                  <div className="relative px-4 text-sm text-gray-500 bg-white">
-                    or continue with
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <Button
-                    variant="outline"
-                    className="flex items-center justify-center gap-2"
-                  >
-                    <svg className="h-5 w-5" viewBox="0 0 24 24">
-                      <path
-                        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                        fill="#4285F4"
-                      />
-                      <path
-                        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                        fill="#34A853"
-                      />
-                      <path
-                        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                        fill="#FBBC05"
-                      />
-                      <path
-                        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                        fill="#EA4335"
-                      />
-                    </svg>
-                    Google
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="flex items-center justify-center gap-2"
-                  >
-                    <Facebook className="h-5 w-5 text-blue-600" />
-                    Facebook
-                  </Button>
-                </div>
               </CardFooter>
             </Card>
           </TabsContent>
