@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { EyeIcon, EyeOffIcon, Facebook } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { toast, useToast } from "@/components/ui/use-toast";
 import {
   Select,
   SelectContent,
@@ -22,10 +22,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-// import { HandleSignup } from "./signup";
 
 export default function AuthPage() {
   const [signupEmail, setSignupEmail] = useState("");
+  const [signupName, setSignupName] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [signupConfirmPassword, setSignupConfirmPassword] = useState("");
   const [role, setRole] = useState("");
@@ -34,65 +34,62 @@ export default function AuthPage() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [password, setPassword] = useState("");
-  const [isRestaurantOwner, setIsRestaurantOwner] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
   const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+  const handleSignup = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    setLoading(true);
+    setMessage("");
+    const { toast } = useToast();
 
-const handleSignup = async () => {
-  setLoading(true);
-  setMessage("");
-  const { toast } = useToast();
-
-  try {
-    const response = await fetch(`${BASE_URL}/api/auth/signup`, {
-      method: "POST",
-      credentials: "include", // only if your API uses cookies
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        signupEmail,
-        signupPassword,
-        signupConfirmPassword,
-        role,
-      }),
-    });
-   console.log('this is response', response)
-    const data = await response.json();
-
-    console.log('this is response.json', data)
-
-    if (response.ok) {
-      toast({
-        title: "✅ Signup Successful",
-        description: "You can now log in.",
+    try {
+      const response = await fetch(`${BASE_URL}/api/auth/signup`, {
+        method: "POST",
+        credentials: "include", // only if your API uses cookies
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: signupName,
+          email: signupEmail,
+          password: signupPassword,
+          confirmPassword: signupConfirmPassword,
+          role,
+        }),
       });
 
-      // Optionally redirect
-      router.push("/login");
-    } else {
+      const data = await response.json();
+      console.log("this is response.json", data);
+
+      if (response.ok) {
+        toast({
+          title: "✅ Signup Successful",
+          description: "You can now log in.",
+        });
+
+        
+        router.push("/auth");
+      } else {
+        toast({
+          title: "❌ Signup Failed",
+          description: data.message || "Please try again.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error("Signup error:", error);
       toast({
-        title: "❌ Signup Failed",
-        description: data.message || "Please try again.",
+        title: "🌐 Network Error",
+        description: "Please check your connection and try again.",
         variant: "destructive",
       });
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Signup error:", error);
-    toast({
-      title: "🌐 Network Error",
-      description: "Please check your connection and try again.",
-      variant: "destructive",
-    });
-  } finally {
-    setLoading(false);
-  }
-};
-
-  
+  };
 
   const handleLogin = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -297,6 +294,16 @@ const handleSignup = async () => {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name-signup">Name</Label>
+                  <Input
+                    id="name-signup"
+                    type="name"
+                    placeholder="Name"
+                    value={signupName}
+                    onChange={(e) => setSignupName(e.target.value)}
+                  />
+                </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="email-signup">Email</Label>
@@ -366,10 +373,7 @@ const handleSignup = async () => {
                 <div className="space-y-2">
                   <Label htmlFor="role">Role</Label>
                   <div className="relative">
-                    <Select 
-                    value={role} 
-                    onValueChange={(val) => setRole(val)}
-                    >
+                    <Select value={role} onValueChange={(val) => setRole(val)}>
                       <SelectTrigger
                         id="role"
                         className="w-full rounded-md border px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-ring"
@@ -378,7 +382,7 @@ const handleSignup = async () => {
                       </SelectTrigger>
                       <SelectContent className="z-50">
                         <SelectItem value="user">User</SelectItem>
-                        <SelectItem value="admin">Admin</SelectItem>
+                        {/* <SelectItem value="admin">Admin</SelectItem> */}
                         <SelectItem value="restaurant_owner">
                           Restaurant Owner
                         </SelectItem>
@@ -386,7 +390,6 @@ const handleSignup = async () => {
                     </Select>
                   </div>
                 </div>
-
               </CardContent>
               <CardFooter className="flex flex-col space-y-4">
                 <Button
