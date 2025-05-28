@@ -107,20 +107,19 @@ export default function AuthPage() {
       });
 
       const data = await response.json();
+      console.log(data)
 
       if (response.ok) {
         setMessage("Login successful ✅");
 
-        // Validate user data structure
         if (!data.user || !data.user.role) {
           alert("Invalid user data received from server");
           return;
         }
 
-        // Role-based routing with fallback
         const roleRedirects: { [key: string]: string } = {
-          admin: "/admin",
-          restaurant_owner: "/dashboard",
+          admin: "/admin-panel",
+          restaurant_owner: "/restaurant-dashboard",
           default: "/deals",
         };
 
