@@ -36,6 +36,7 @@ export default function AuthPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
   const router = useRouter();
   const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -110,7 +111,11 @@ export default function AuthPage() {
       console.log(data)
 
       if (response.ok) {
-        setMessage("Login successful ✅");
+        alert("Login successful ✅");
+        // toast({
+        //   title: "✅ Sign Successful",
+        //   description: "You can now log in.",
+        // });
 
         if (!data.user || !data.user.role) {
           alert("Invalid user data received from server");
@@ -123,14 +128,12 @@ export default function AuthPage() {
           default: "/deals",
         };
 
-        // Get valid role or use default
         const validRole = Object.keys(roleRedirects).includes(data.user.role)
           ? data.user.role
           : "default";
 
         router.push(roleRedirects[validRole]);
       } else {
-        // Enhanced error messages
         const errorMessage = (data.message || "login failed").toLowerCase();
 
         if (

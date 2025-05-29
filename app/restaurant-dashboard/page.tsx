@@ -2,6 +2,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { DollarSign, Package, Tag, Users } from "lucide-react"
 import { DashboardShell } from "@/components/dashboard-shell"
 import { DealsList } from "@/components/deals-list"
+import { Button } from "react-day-picker"
 
 export default function DashboardPage() {
   return (
@@ -87,6 +88,12 @@ export default function DashboardPage() {
             </div>
           </CardContent>
         </Card>
+        {/* <Button 
+        // variant="destructive" 
+        // onClick={handleLogout}
+        >
+          Logout
+        </Button> */}
       </div>
     </DashboardShell>
   )
