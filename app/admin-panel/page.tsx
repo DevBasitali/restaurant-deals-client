@@ -7,8 +7,6 @@ import { RecentDeals } from "@/components/recent-deals"
 import { RecentBids } from "@/components/recent-bids"
 
 export default function AdminDashboard() {
-
-
   return (
     <AdminShell>
       <div className="flex flex-col gap-5">
