@@ -111,8 +111,7 @@ export default function AuthPage() {
       console.log(data);
 
       if (response.ok) {
-        // replace("_", " ")
-        toast.success(`Welcome, ${data.user.name}!`, {
+        toast.success(`Welcome, ${data.user.name.replace("_", " ")}`, {
           duration: 3000,
           position: "top-right",
           icon: "✅",
