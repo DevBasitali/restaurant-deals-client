@@ -66,26 +66,27 @@ export default function AuthPage() {
       console.log("this is response.json", data);
 
       if (response.ok) {
-        // toast({
-        //   title: "✅ Signup Successful",
-        //   description: "You can now log in.",
-        // });
+        toast.success('Signup Sucessfull', {
+          duration: 3000,
+          position: "top-right",
+          icon: "✅",
+        });
 
         router.push("/auth");
       } else {
-        // toast({
-        //   title: "❌ Signup Failed",
-        //   description: data.message || "Please try again.",
-        //   variant: "destructive",
-        // });
+        toast('Signup Failed', {
+          duration: 3000,
+          position: "top-right",
+          icon: "❌",
+        });
       }
     } catch (error) {
       console.error("Signup error:", error);
-      // toast({
-      //   title: "🌐 Network Error",
-      //   description: "Please check your connection and try again.",
-      //   variant: "destructive",
-      // });
+      toast('Network Error', {
+          duration: 3000,
+          position: "top-right",
+          icon: "🌐",
+        });
     } finally {
       setLoading(false);
     }
@@ -110,7 +111,8 @@ export default function AuthPage() {
       console.log(data);
 
       if (response.ok) {
-        toast.success(`Welcome, ${data.user.role.replace('_', ' ')}!`, {
+        // replace("_", " ")
+        toast.success(`Welcome, ${data.user.name}!`, {
           duration: 3000,
           position: "top-right",
           icon: "✅",
