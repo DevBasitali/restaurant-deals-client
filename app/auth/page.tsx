@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { ClipLoader } from "react-spinners";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Card,
@@ -13,7 +14,7 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { EyeIcon, EyeOffIcon, Facebook } from "lucide-react";
-import { toast, useToast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import {
   Select,
   SelectContent,
@@ -36,7 +37,7 @@ export default function AuthPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   const router = useRouter();
   const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -44,7 +45,6 @@ export default function AuthPage() {
     e.preventDefault();
     setLoading(true);
     setMessage("");
-    const { toast } = useToast();
 
     try {
       const response = await fetch(`${BASE_URL}/api/auth/signup`, {
@@ -66,27 +66,26 @@ export default function AuthPage() {
       console.log("this is response.json", data);
 
       if (response.ok) {
-        toast({
-          title: "✅ Signup Successful",
-          description: "You can now log in.",
-        });
+        // toast({
+        //   title: "✅ Signup Successful",
+        //   description: "You can now log in.",
+        // });
 
-        
         router.push("/auth");
       } else {
-        toast({
-          title: "❌ Signup Failed",
-          description: data.message || "Please try again.",
-          variant: "destructive",
-        });
+        // toast({
+        //   title: "❌ Signup Failed",
+        //   description: data.message || "Please try again.",
+        //   variant: "destructive",
+        // });
       }
     } catch (error) {
       console.error("Signup error:", error);
-      toast({
-        title: "🌐 Network Error",
-        description: "Please check your connection and try again.",
-        variant: "destructive",
-      });
+      // toast({
+      //   title: "🌐 Network Error",
+      //   description: "Please check your connection and try again.",
+      //   variant: "destructive",
+      // });
     } finally {
       setLoading(false);
     }
@@ -108,14 +107,14 @@ export default function AuthPage() {
       });
 
       const data = await response.json();
-      console.log(data)
+      console.log(data);
 
       if (response.ok) {
-        alert("Login successful ✅");
-        // toast({
-        //   title: "✅ Sign Successful",
-        //   description: "You can now log in.",
-        // });
+        toast.success(`Welcome, ${data.user.role.replace('_', ' ')}!`, {
+          duration: 3000,
+          position: "top-right",
+          icon: "✅",
+        });
 
         if (!data.user || !data.user.role) {
           alert("Invalid user data received from server");
@@ -223,16 +222,6 @@ export default function AuthPage() {
                     </Button>
                   </div>
                 </div>
-                {/* <div className="flex items-center space-x-2">
-                  <Switch
-                    id="restaurant-owner-login"
-                    checked={isRestaurantOwner}
-                    onCheckedChange={setIsRestaurantOwner}
-                  />
-                  <Label htmlFor="restaurant-owner-login">
-                    Continue as Restaurant Owner
-                  </Label>
-                </div> */}
               </CardContent>
               <CardFooter className="flex flex-col space-y-4">
                 <Button
@@ -240,17 +229,17 @@ export default function AuthPage() {
                   onClick={handleLogin}
                   disabled={loading}
                 >
-                  {loading ? "Logging in..." : "Login"}
+                  {loading ? <ClipLoader size={18} color="#fff" /> : "Login"}
                 </Button>
-                <div className="relative flex items-center justify-center">
+                {/* <div className="relative flex items-center justify-center">
                   <div className="absolute inset-0 flex items-center">
                     <span className="w-full border-t border-gray-300" />
                   </div>
                   <div className="relative px-4 text-sm text-gray-500 bg-white">
                     or continue with
                   </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
+                </div> */}
+                {/* <div className="grid grid-cols-2 gap-4">
                   <Button
                     variant="outline"
                     className="flex items-center justify-center gap-2"
@@ -282,7 +271,7 @@ export default function AuthPage() {
                     <Facebook className="h-5 w-5 text-blue-600" />
                     Facebook
                   </Button>
-                </div>
+                </div> */}
               </CardFooter>
             </Card>
           </TabsContent>
@@ -384,7 +373,7 @@ export default function AuthPage() {
                       </SelectTrigger>
                       <SelectContent className="z-50">
                         <SelectItem value="user">User</SelectItem>
-                        {/* <SelectItem value="admin">Admin</SelectItem> */}
+
                         <SelectItem value="restaurant_owner">
                           Restaurant Owner
                         </SelectItem>
@@ -399,7 +388,7 @@ export default function AuthPage() {
                   onClick={handleSignup}
                   disabled={loading}
                 >
-                  {loading ? "Signing up..." : "Sign Up"}
+                  {loading ? <ClipLoader size={18} color="#fff" /> : "Sign Up"}
                   {message && (
                     <p className="text-center text-sm text-red-600">
                       {message}

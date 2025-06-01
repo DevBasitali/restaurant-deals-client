@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
-import { ToastContainer } from 'react-toastify'
+import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
   title: "DealDish",
@@ -16,9 +15,8 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
+        <Toaster position="top-right" reverseOrder={false} />
         {children}
-        <ToastContainer position="top-right" autoClose={3000} />
-        <Toaster />
       </body>
     </html>
   );
