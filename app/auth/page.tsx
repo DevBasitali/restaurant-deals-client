@@ -66,7 +66,7 @@ export default function AuthPage() {
       console.log("this is response.json", data);
 
       if (response.ok) {
-        toast.success('Signup Sucessfull', {
+        toast.success("Signup Sucessfull", {
           duration: 3000,
           position: "top-right",
           icon: "✅",
@@ -74,7 +74,7 @@ export default function AuthPage() {
 
         router.push("/auth");
       } else {
-        toast('Signup Failed', {
+        toast("Signup Failed", {
           duration: 3000,
           position: "top-right",
           icon: "❌",
@@ -82,11 +82,11 @@ export default function AuthPage() {
       }
     } catch (error) {
       console.error("Signup error:", error);
-      toast('Network Error', {
-          duration: 3000,
-          position: "top-right",
-          icon: "🌐",
-        });
+      toast("Network Error", {
+        duration: 3000,
+        position: "top-right",
+        icon: "🌐",
+      });
     } finally {
       setLoading(false);
     }
@@ -96,7 +96,6 @@ export default function AuthPage() {
     e.preventDefault();
     setLoading(true);
     setMessage("");
-
     try {
       const response = await fetch(`${BASE_URL}/api/auth/login`, {
         method: "POST",

@@ -7,6 +7,10 @@ import { RecentDeals } from "@/components/recent-deals"
 import { RecentBids } from "@/components/recent-bids"
 
 export default function AdminDashboard() {
+
+
+
+
   return (
     <AdminShell>
       <div className="flex flex-col gap-5">
@@ -60,7 +64,6 @@ export default function AdminDashboard() {
         </Card>
       </div>
 
-      {/* Pending Approvals Table */}
       <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-7">
         <Card className="col-span-7">
           <CardHeader>
@@ -73,7 +76,6 @@ export default function AdminDashboard() {
         </Card>
       </div>
 
-      {/* Recent Activity */}
       <div className="grid gap-4 md:grid-cols-1 lg:grid-cols-7">
         <Card className="col-span-4">
           <CardHeader>
