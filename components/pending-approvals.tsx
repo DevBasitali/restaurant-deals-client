@@ -1,10 +1,17 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { CheckCircle, XCircle } from "lucide-react"
+import { useState } from "react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { CheckCircle, XCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,18 +19,61 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
+// import { useRouter } from "next/router";
+
+const pendingApprovals = [
+  {
+    id: "APP-1234",
+    name: "Bella Italia Restaurant",
+    type: "Restaurant",
+    submitted: "2023-06-01",
+    status: "Pending",
+  },
+  {
+    id: "APP-1235",
+    name: "50% Off Pizza Deal",
+    type: "Deal",
+    submitted: "2023-06-02",
+    status: "Pending",
+  },
+  {
+    id: "APP-1236",
+    name: "Sushi Master Restaurant",
+    type: "Restaurant",
+    submitted: "2023-06-03",
+    status: "Pending",
+  },
+  {
+    id: "APP-1237",
+    name: "BOGO Sushi Rolls",
+    type: "Deal",
+    submitted: "2023-06-03",
+    status: "Pending",
+  },
+  {
+    id: "APP-1238",
+    name: "Taco Fiesta Restaurant",
+    type: "Restaurant",
+    submitted: "2023-06-04",
+    status: "Pending",
+  },
+];
 
 export function PendingApprovals() {
-  const [approvals, setApprovals] = useState(pendingApprovals)
+  // const router = useRouter();
+  const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+
+  const [approvals, setApprovals] = useState(pendingApprovals);
 
   const handleApprove = (id: string) => {
-    setApprovals(approvals.filter((approval) => approval.id !== id))
-  }
+    setApprovals(approvals.filter((approval) => approval.id !== id));
+  };
 
   const handleReject = (id: string) => {
-    setApprovals(approvals.filter((approval) => approval.id !== id))
-  }
+    setApprovals(approvals.filter((approval) => approval.id !== id));
+  };
 
   return (
     <div className="rounded-md border">
@@ -48,7 +98,13 @@ export function PendingApprovals() {
               </TableCell>
               <TableCell>{approval.submitted}</TableCell>
               <TableCell>
-                <Badge variant={approval.status === "Pending" ? "outline" : "default"}>{approval.status}</Badge>
+                <Badge
+                  variant={
+                    approval.status === "Pending" ? "outline" : "default"
+                  }
+                >
+                  {approval.status}
+                </Badge>
               </TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-2">
@@ -95,7 +151,9 @@ export function PendingApprovals() {
                       <DropdownMenuItem>View details</DropdownMenuItem>
                       <DropdownMenuItem>Request changes</DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem className="text-red-600">Ban user</DropdownMenuItem>
+                      <DropdownMenuItem className="text-red-600">
+                        Ban user
+                      </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
@@ -105,43 +163,5 @@ export function PendingApprovals() {
         </TableBody>
       </Table>
     </div>
-  )
+  );
 }
-
-const pendingApprovals = [
-  {
-    id: "APP-1234",
-    name: "Bella Italia Restaurant",
-    type: "Restaurant",
-    submitted: "2023-06-01",
-    status: "Pending",
-  },
-  {
-    id: "APP-1235",
-    name: "50% Off Pizza Deal",
-    type: "Deal",
-    submitted: "2023-06-02",
-    status: "Pending",
-  },
-  {
-    id: "APP-1236",
-    name: "Sushi Master Restaurant",
-    type: "Restaurant",
-    submitted: "2023-06-03",
-    status: "Pending",
-  },
-  {
-    id: "APP-1237",
-    name: "BOGO Sushi Rolls",
-    type: "Deal",
-    submitted: "2023-06-03",
-    status: "Pending",
-  },
-  {
-    id: "APP-1238",
-    name: "Taco Fiesta Restaurant",
-    type: "Restaurant",
-    submitted: "2023-06-04",
-    status: "Pending",
-  },
-]
